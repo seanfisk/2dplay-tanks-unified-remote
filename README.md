@@ -9,9 +9,10 @@ This is a [Unified Remote][] custom remote for [2DPlay Tanks][]. Both OS X and W
 Installation
 ------------
 
-Visit the [Releases page][] to find and install the latest release.
+Visit the [Releases page][] to find and install the latest release. If using the OS X disk image, download the DMG and double-click the package installer. If using the zip file, follow the [Unified Remote instructions on installing a custom remote][custom-remote].
 
 [Releases page]: https://github.com/seanfisk/2dplay-tanks-unified-remote/releases
+[custom-remote]: https://www.unifiedremote.com/tutorials/how-to-install-a-custom-remote
 
 Development
 -----------

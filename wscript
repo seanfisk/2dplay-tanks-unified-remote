@@ -7,6 +7,7 @@
 import os
 import platform
 import itertools
+import zipfile
 
 # Avoid having unnecessary public attributes in this file, else they will be
 # picked up as Waf commands.
@@ -46,6 +47,37 @@ def configure(ctx):
 
 def build(ctx):
     remote_nodes = ctx.path.ant_glob('TanksGame/*')
+
+    # Build README
+    readme_md_node = ctx.path.find_resource('README.md')
+    css_node = ctx.path.find_resource(['css', 'modest', 'css', 'modest.css'])
+    readme_html_node = readme_md_node.change_ext('.html')
+
+    @ctx.rule(target=readme_html_node,
+              source=[readme_md_node, css_node],
+              vars=['PANDOC'])
+    def _convert_readme(tsk):
+        return tsk.exec_command(tsk.env.PANDOC + [
+            '--from', 'markdown_github',
+            '--to', 'html5',
+            '--css', tsk.inputs[1].abspath(),
+            '--self-contained',
+            tsk.inputs[0].abspath(),
+            '--output', tsk.outputs[0].abspath(),
+        ], cwd=ctx.srcnode.abspath())
+
+    # Build archive
+    @ctx.rule(source=[readme_html_node] + remote_nodes,
+              target='TanksGame-{}.zip'.format(ctx.env.VERSION))
+    def _make_archive(tsk):
+        readme_node = tsk.inputs[0]
+        with zipfile.ZipFile(
+                tsk.outputs[0].abspath(), 'w',
+                compression=zipfile.ZIP_DEFLATED) as archive:
+            archive.write(readme_node.abspath(),
+                          arcname=os.path.join('TanksGame', readme_node.name))
+            for node in tsk.inputs[1:]:
+                archive.write(node.abspath(), node.relpath())
 
     if ctx.env.SYSTEM == 'Darwin':
         root_node = ctx.path.find_or_declare('root')
@@ -98,23 +130,6 @@ def build(ctx):
                 '--version', tsk.env.VERSION,
                 tsk.outputs[0].abspath(),
             ])
-
-        readme_md_node = ctx.path.find_resource('README.md')
-        css_node = ctx.path.find_resource(['css', 'modest', 'css', 'modest.css'])
-        readme_html_node = readme_md_node.change_ext('.html')
-
-        @ctx.rule(target=readme_html_node,
-                  source=[readme_md_node, css_node],
-                  vars=['PANDOC'])
-        def _convert_readme(tsk):
-            return tsk.exec_command(tsk.env.PANDOC + [
-                '--from', 'markdown_github',
-                '--to', 'html5',
-                '--css', tsk.inputs[1].abspath(),
-                '--self-contained',
-                tsk.inputs[0].abspath(),
-                '--output', tsk.outputs[0].abspath(),
-            ], cwd=ctx.srcnode.abspath())
 
         dmg_node = pkg_dir.find_or_declare(ctx.env.APPNAME + '.dmg')
         dmgbuild_settings_node = pkg_dir.find_resource('dmgbuild-settings.py')
