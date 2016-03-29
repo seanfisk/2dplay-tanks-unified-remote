@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<installer-gui-script minSpecVersion="1">
+    <title>Install @APPNAME@</title>
+    <options customize="never" require-scripts="true" />
+    <organization>@ORG_ID@</organization>
+    <domains enable_anywhere="false" enable_currentUserHome="true" enable_localSystem="false" />
+    <volume-check>
+        <allowed-os-versions>
+            <os-version min="10.10"/>
+        </allowed-os-versions>
+    </volume-check>
+
+    <pkg-ref id="@PKG_ID@" version="0">@PKG_BASENAME@</pkg-ref>
+
+    <choices-outline>
+        <line choice="@PKG_ID@" />
+    </choices-outline>
+
+    <choice id="@PKG_ID@" visible="false">
+        <pkg-ref id="@PKG_ID@" />
+    </choice>
+</installer-gui-script>

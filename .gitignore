@@ -9,3 +9,4 @@ waf3-*-*/
 .lock-waf_*_build
 
 /build/
+.python-version
