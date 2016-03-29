@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <row>
+        <button icon="left" text="Move Left" ontap="move_left" />
+        <button icon="right" text="Move Right" ontap="move_right" />
+    </row>
+    <row>
+        <button icon="rotateleft" text="Rotate Cannon Left" ontap="rotate_cannon_left" />
+        <button icon="rotateright" text="Rotate Cannon Right" ontap="rotate_cannon_right" />
+    </row>
+    <row>
+        <button icon="up" text="Power Up" ontap="power_up" />
+        <button text="Next Weapon" ontap="weapon_next" />
+    </row>
+    <row>
+        <button icon="down" text="Power Down" ontap="power_down" />
+        <button text="Previous Weapon" ontap="weapon_prev" />
+    </row>
+    <row>
+        <button text="💥" ontap="fire" />
+    </row>
+</layout>
